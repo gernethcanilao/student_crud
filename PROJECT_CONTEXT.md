@@ -98,21 +98,23 @@ frontend/
 
 ## 4. Phased Implementation Plan
 
-- [ ] **Phase 1: Project Scaffolding, Tailwind Setup & Proxy Configuration**
-  - Initialize Vite React project in `./frontend`.
-  - Install and configure Tailwind CSS (`tailwind.config.js`, `postcss.config.js`, `@tailwind` directives in `index.css`).
-  - Configure `vite.config.js` proxy pointing `/canilao` to `http://localhost:8080`.
-- [ ] **Phase 2: Service Layer**
-  - Implement `src/services/studentService.js` handling `fetch` CRUD requests with clean error propagation.
-- [ ] **Phase 3: Core UI Components (Modal-Free)**
-  - Build `Navbar` with brand styling.
-  - Build `StudentForm` (inline card for creating and updating students with responsive grid).
-  - Build `StudentList` & `StudentRow` (Tailwind data table with inline 2-click delete confirmation).
-  - Add search and filtering capabilities.
-- [ ] **Phase 4: State Management & Toast Notifications**
-  - Wire up `App.jsx` state flow (list fetching, selection for edit, cancel edit, toast alerts).
-- [ ] **Phase 5: Backend Alignment & CORS Support**
-  - Verify Spring Boot runs smoothly and test end-to-end integration.
+- [x] **Phase 1: Project Scaffolding, Tailwind Setup & Proxy Configuration**
+  - Initialized Vite React project in `./frontend`.
+  - Installed and configured Tailwind CSS v4 (`@tailwindcss/vite` in `vite.config.js`, `@import "tailwindcss"` in `index.css`).
+  - Configured `vite.config.js` proxy pointing `/canilao` to `http://localhost:8080`.
+- [x] **Phase 2: Service Layer**
+  - Implemented `src/services/studentService.js` handling all CRUD operations (`getAllStudents`, `getStudentById`, `createStudent`, `updateStudent`, `deleteStudent`).
+- [x] **Phase 3: Core UI Components (Modal-Free)**
+  - Built `Navbar.jsx` with brand logo, student counter pill, and refresh button.
+  - Built `StudentForm.jsx` inline card for Enroll/Edit student with validation and clear/cancel actions.
+  - Built `StudentRow.jsx` with badges and safe inline 2-step delete confirmation (no modal).
+  - Built `StudentList.jsx` with live search (name, ID, course, section), course filter, and empty states.
+- [x] **Phase 4: State Management & Toast Notifications**
+  - Wired up `App.jsx` state flow (list fetching, inline edit mode, toast notifications, responsive split-screen grid).
+  - Built `Toast.jsx` for floating feedback alerts.
+- [x] **Phase 5: Backend Alignment & CORS Support**
+  - Added `@CrossOrigin(origins = "*")` to `StudentController.java` to support both direct API access and dev proxy.
+  - Verified production build (`npm run build`) compiles with 0 errors.
 
 ---
 

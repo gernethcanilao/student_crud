@@ -53,60 +53,64 @@ flowchart LR
 
 ---
 
-## 3. Frontend Architecture (Vite + React + JavaScript)
+## 3. Frontend Architecture (Vite + React + JavaScript + Tailwind CSS)
+
+### Design & Styling Choice
+- **CSS Framework**: **Tailwind CSS** (configured with PostCSS/Autoprefixer)
+- **UI Paradigm**: **No Modals**. Form interactions (Create / Edit) and Delete actions are handled via **inline panels / dedicated split-panel cards** (e.g., sticky side/top form card + data table with inline action confirmation). This provides a streamlined, seamless single-page experience without distracting dialog overlays.
 
 ### Proposed Directory Layout (`./frontend`)
 ```
 frontend/
 ├── package.json
 ├── vite.config.js               # Dev server with proxy to backend
+├── tailwind.config.js           # Tailwind configuration
+├── postcss.config.js            # PostCSS configuration
 ├── index.html
 ├── src/
 │   ├── main.jsx                 # React root mount
 │   ├── App.jsx                  # Main layout, state coordination, notifications
-│   ├── App.css                  # UI styling (modern, responsive clean theme)
-│   ├── index.css                # Global styles, reset, fonts
+│   ├── index.css                # Tailwind directives (@tailwind base, etc.)
 │   ├── services/
 │   │   └── studentService.js    # API abstraction (getAll, getById, create, update, delete)
 │   ├── components/
-│   │   ├── Navbar.jsx           # App brand header & actions
-│   │   ├── StudentList.jsx      # Table/card list with search, filter, edit/delete actions
-│   │   ├── StudentFormModal.jsx # Add/Edit modal form with validation
-│   │   ├── DeleteConfirmModal.jsx # Safe delete confirmation dialogue
-│   │   ├── ToastNotification.jsx  # Success/error feedback alerts
-│   │   └── LoadingSpinner.jsx   # UI loading indicator
+│   │   ├── Navbar.jsx           # App brand header & status badges
+│   │   ├── StudentForm.jsx      # Non-modal inline card for Add / Edit student with form validation
+│   │   ├── StudentList.jsx      # Tailwind data table with search, filter, inline delete confirmation
+│   │   ├── StudentRow.jsx       # Individual student row with inline action controls
+│   │   └── Toast.jsx            # Dynamic feedback alerts (success / error banners)
 │   └── utils/
-│       └── validation.js        # Form input validation helpers
+│       └── validation.js        # Form validation helper functions
 ```
 
 ### Key UI Features Planned
-1. **Full CRUD Support**:
-   - **Create**: Add new student modal form with field validations.
-   - **Read**: Dynamic student table with quick search (filter by name/course/section) and refresh trigger.
-   - **Update**: Edit button pre-fills modal with existing data, submitting a PUT request.
-   - **Delete**: Delete button triggers confirmation modal before sending DELETE request.
-2. **Resilient UX**:
-   - Loading spinners during network calls.
-   - Toast notifications for error messages and success confirmations.
-   - Empty state UI when no students are registered.
-3. **Responsive Design**:
-   - Modern, high-contrast, clean layout adapted for mobile and desktop screens.
+1. **Full CRUD Support (Modal-Free)**:
+   - **Create**: Dedicated top/side card with Tailwind styling, input validation, and clear/reset actions.
+   - **Read**: Responsive Tailwind data table with instant real-time search (by firstname, lastname, course, section).
+   - **Update**: Clicking "Edit" seamlessly populates the inline form, scrolls/focuses the input, and changes the mode to "Update Student" with a "Cancel Edit" button.
+   - **Delete**: Inline confirmation mechanism directly within the table row (or inline alert banner) requiring 2-step click confirmation to prevent accidental deletion without modal popups.
+2. **Tailwind Design System**:
+   - Modern palette (slate/indigo/emerald), responsive layout (grid/flex), smooth hover and focus states, custom status badges for courses/sections.
+3. **Resilient UX**:
+   - Dynamic loading indicators and toast/banner notifications for instant user feedback.
 
 ---
 
 ## 4. Phased Implementation Plan
 
-- [ ] **Phase 1: Project Scaffolding & Proxy Setup**
+- [ ] **Phase 1: Project Scaffolding, Tailwind Setup & Proxy Configuration**
   - Initialize Vite React project in `./frontend`.
-  - Configure `vite.config.js` proxy pointing to `http://localhost:8080`.
+  - Install and configure Tailwind CSS (`tailwind.config.js`, `postcss.config.js`, `@tailwind` directives in `index.css`).
+  - Configure `vite.config.js` proxy pointing `/canilao` to `http://localhost:8080`.
 - [ ] **Phase 2: Service Layer**
-  - Implement `src/services/studentService.js` handling `fetch` / `axios` CRUD requests with clean error propagation.
-- [ ] **Phase 3: Core UI Components**
-  - Build `Navbar`, `StudentList`, `StudentFormModal`, and `DeleteConfirmModal`.
+  - Implement `src/services/studentService.js` handling `fetch` CRUD requests with clean error propagation.
+- [ ] **Phase 3: Core UI Components (Modal-Free)**
+  - Build `Navbar` with brand styling.
+  - Build `StudentForm` (inline card for creating and updating students with responsive grid).
+  - Build `StudentList` & `StudentRow` (Tailwind data table with inline 2-click delete confirmation).
   - Add search and filtering capabilities.
 - [ ] **Phase 4: State Management & Toast Notifications**
-  - Wire up `App.jsx` state flow (list fetching, modal open/close, optimistic or refreshed UI updates).
-  - Add success/error alerts.
+  - Wire up `App.jsx` state flow (list fetching, selection for edit, cancel edit, toast alerts).
 - [ ] **Phase 5: Backend Alignment & CORS Support**
   - Verify Spring Boot runs smoothly and test end-to-end integration.
 

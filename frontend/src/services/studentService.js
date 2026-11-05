@@ -1,4 +1,24 @@
-const BASE_URL = '/canilao/students';
+/**
+ * Resolves the backend base URL dynamically:
+ * - When deployed on Render or provided via VITE_API_BASE_URL: uses the remote URL
+ * - In local dev (when unset): uses relative path '' so Vite's dev proxy forwards to localhost:8080
+ */
+function getApiRoot() {
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  if (envUrl) {
+    let clean = envUrl.trim().replace(/\/+$/, '');
+    const withoutProto = clean.replace(/^https?:\/\//i, '');
+    if (!withoutProto.includes('.') && !withoutProto.includes('localhost')) {
+      clean = `https://${withoutProto}.onrender.com`;
+    } else if (!clean.startsWith('http://') && !clean.startsWith('https://')) {
+      clean = `https://${clean}`;
+    }
+    return clean;
+  }
+  return '';
+}
+
+const BASE_URL = `${getApiRoot()}/canilao/students`;
 
 /**
  * Handle API responses with uniform error parsing

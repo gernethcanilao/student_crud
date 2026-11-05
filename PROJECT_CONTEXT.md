@@ -149,4 +149,26 @@ cd "STUDENT- CRUD"
    npm install
    npm run dev
    ```
+
+---
+
+## 6. Render.com Deployment Guide (Blueprint / Infrastructure-as-Code)
+
+The repository includes a complete Render Blueprint [`render.yaml`](./render.yaml) and Dockerfile [`student/Dockerfile`](./student/Dockerfile) configured for free-tier deployment.
+
+### Services Defined in `render.yaml`:
+1. **`student-db`**: Free managed PostgreSQL database (`db_student`).
+2. **`student-backend`**: Dockerized Spring Boot 3 web service (Java 21 Alpine container), port `8080`, connected dynamically to `student-db` via environment variables.
+3. **`student-frontend`**: Static Site service built using Vite React (`cd frontend && npm install && npm run build`), publishing `frontend/dist`, with SPA rewrite rule (`/* -> /index.html`) and backend host injection (`VITE_API_BASE_URL`).
+
+### How to Deploy on Render:
+1. Go to [Render Dashboard](https://dashboard.render.com).
+2. Click **New +** ➔ **Blueprint**.
+3. Connect your GitHub repository: `https://github.com/gernethcanilao/student_crud`.
+4. Render will detect [`render.yaml`](./render.yaml) and automatically create:
+   - PostgreSQL Database: `student-db`
+   - Web Service: `student-backend`
+   - Static Site: `student-frontend`
+5. Click **Apply** to deploy all services!
+   ```
 2. Open `http://localhost:5173` in your browser.
